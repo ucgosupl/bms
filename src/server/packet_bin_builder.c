@@ -25,7 +25,6 @@ const struct builder * packet_bin_builder_get(void)
     return &packet_bin_builder;
 }
 
-
 static void packet_bin_builder_reset(void)
 {
     memset(payload, 0, MAX_PAYLOAD);

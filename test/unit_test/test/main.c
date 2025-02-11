@@ -1,15 +1,14 @@
 #include "modbus/modbus.h"
 #include "records/records.h"
 #include "updater/updater.h"
-
-#include "aaa/builder.h"
+#include "utils/timestamp.h"
+#include "server/builder.h"
 
 #include <stdio.h>
 #include <string.h>
 
 static uint8_t data_buf[64];
 
-static void update_console(void);
 static void update_mqtt(void);
 static void update_mqtt_txt(void);
 
@@ -25,29 +24,13 @@ int main(void)
    records_add(1, 3, 0x0030, 1, &data_buf[6]);    //2 bytes
    records_add(1, 3, 0x0040, 2, &data_buf[8]);    //4 bytes
 
-   updater_completed_subscribe(update_console);
    updater_completed_subscribe(update_mqtt_txt);
    updater_completed_subscribe(update_mqtt);
+
    updater_cycle();
 
    return 0;
 }
-
-static void update_console(void)
-{
-    records_iterator_t it = records_iterator_create();
-
-    for (const struct record *r = records_get_next(&it); r != NULL; r = records_get_next(&it))
-    {
-      uint32_t val = ((r->len) == 1) ?
-                        r->val[0] | r->val[1] << 8 :
-                        r->val[0] | r->val[1] << 8 | r->val[2]<< 16 | r->val[3] << 24;
-
-       printf("SLAVE: 0x%02X, FUN: 0x%02X REG: 0x%04X, LEN: 0x%04X, VAL: 0x%08X\n", r->slave, r->fun, r->reg, r->len, val);
-    }
-}
-
-#include "utils/timestamp.h"
 
 static void update_mqtt(void)
 {
@@ -78,18 +61,17 @@ static void payload_print(uint8_t *p)
 
 static void update_mqtt_txt(void)
 {
+   const struct builder *b = console_builder_get();
+
+   b->reset();
+
    struct datetime dt;
    timestamp_get(&dt);
+   b->add_timestamp(&dt);
 
-   printf("%d-%d-%d, %02d:%02d:%02d\n", dt.year, dt.month, dt.day, dt.h, dt.m, dt.s);
    records_iterator_t it = records_iterator_create();
-   
    for (const struct record *r = records_get_next(&it); r != NULL; r = records_get_next(&it))
    {
-      uint32_t val = ((r->len) == 1) ?
-                        r->val[0] | r->val[1] << 8 :
-                        r->val[0] | r->val[1] << 8 | r->val[2]<< 16 | r->val[3] << 24;
-
-       printf("SLAVE: 0x%02X, FUN: 0x%02X REG: 0x%04X, LEN: 0x%04X, VAL: 0x%08X\n", r->slave, r->fun, r->reg, r->len, val);
+      b->add_record(r);
    }
 }

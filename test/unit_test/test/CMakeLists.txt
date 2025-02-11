@@ -22,7 +22,8 @@ set(SRCS
 
 	${SRC_PATH}/records/records.c
 	${SRC_PATH}/updater/updater.c
-	${SRC_PATH}/aaa/packet_bin_builder.c
+	${SRC_PATH}/server/packet_bin_builder.c
+	${SRC_PATH}/server/console_builder.c
 )
 
 set(TEST_NAME test)
