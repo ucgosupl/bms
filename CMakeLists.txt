@@ -11,4 +11,6 @@ include(CTest)
 add_subdirectory(test/unit_test/unity unity)
 add_subdirectory(test/unit_test/fff fff)
 
+add_subdirectory(test/unit_test/test test)
+
 add_subdirectory(src)
