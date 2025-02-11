@@ -3,6 +3,7 @@ set(CMAKE_AR ar)
 set(CMAKE_RANLIB ranlib)
 
 set(CMAKE_C_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+set(CMAKE_BUILD_TYPE  "Debug")
 
 set(SRC_PATH ../../../src)
 
