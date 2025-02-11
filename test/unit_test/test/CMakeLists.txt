@@ -18,8 +18,11 @@ set(TEST_INCLUDE_DIRS
 
 set(SRCS
 	${SRC_PATH}/modbus/modbus_mock.c
+	${SRC_PATH}/utils/timestamp_mock.c
+
 	${SRC_PATH}/records/records.c
 	${SRC_PATH}/updater/updater.c
+	${SRC_PATH}/aaa/packet_bin_builder.c
 )
 
 set(TEST_NAME test)

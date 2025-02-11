@@ -2,6 +2,8 @@
 #include "records/records.h"
 #include "updater/updater.h"
 
+#include "aaa/builder.h"
+
 #include <stdio.h>
 #include <string.h>
 
@@ -11,7 +13,7 @@ static void update_console(void);
 static void update_mqtt(void);
 static void update_mqtt_txt(void);
 
-static void payload_print(void);
+static void payload_print(uint8_t *p);
 
 int main(void)
 {
@@ -27,8 +29,6 @@ int main(void)
    updater_completed_subscribe(update_mqtt_txt);
    updater_completed_subscribe(update_mqtt);
    updater_cycle();
-
-   payload_print();
 
    return 0;
 }
@@ -47,67 +47,32 @@ static void update_console(void)
     }
 }
 
-struct datetime
-{
-   uint16_t year;
-   uint8_t month;
-   uint8_t day;
-
-   uint8_t h;
-   uint8_t m;
-   uint8_t s;
-};
-
-uint8_t seed = 0;
-
-static void timestamp_get(struct datetime *dt)
-{
-   dt->year = 2025;
-   dt->month = 02;
-   dt->day = 20;
-
-   dt->h = seed++;
-   dt->m = seed++;
-   dt->s = seed++;
-}
-
-static uint8_t payload[1024];
+#include "utils/timestamp.h"
 
 static void update_mqtt(void)
 {
+   const struct builder *b = packet_bin_builder_get();
+
+   b->reset();
+
    struct datetime dt;
    timestamp_get(&dt);
+   b->add_timestamp(&dt);
 
-   payload[0] = dt.year >> 8;
-   payload[1] = dt.year;
-   payload[2] = dt.month;
-   payload[3] = dt.day;
-   payload[4] = dt.h;
-   payload[5] = dt.m;
-   payload[6] = dt.s;
-   payload[7] = 0;
-
-   uint8_t n = 8;
    records_iterator_t it = records_iterator_create();
    for (const struct record *r = records_get_next(&it); r != NULL; r = records_get_next(&it))
    {
-      payload[n] = r->slave;
-      payload[n + 1] = r->fun;
-      payload[n + 2] = r->reg >> 8;
-      payload[n + 3] = r->reg;
-      payload[n + 4] = r->len >> 8;
-      payload[n + 5] = r->len;
-
-      memcpy(&payload[n + 6], r->val, r->len * 2);
-      n += 6 + r->len*2;
+      b->add_record(r);
    }
+
+   payload_print(b->get_result());
 }
 
-static void payload_print(void)
+static void payload_print(uint8_t *p)
 {
    for (int32_t i = 0; i < 64; i++)
    {
-      printf("0x%02X\n", payload[i]);
+      printf("0x%02X\n", p[i]);
    }
 }
 
