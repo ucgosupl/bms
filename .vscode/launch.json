@@ -14,5 +14,25 @@
             ],
             "runToEntryPoint": "main",
         },
+        {
+            "name": "Debug poc_controller_data",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}//out//poc//controller_data//poc_controller_data.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\Tools\\winlibs-i686-posix-dwarf-gcc-13.2.0-llvm-17.0.5-mingw-w64ucrt-11.0.1-r3\\mingw32\\bin\\gdb.exe",
+            "setupCommands": [
+              {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+              }
+            ],
+          }
     ]
 }
