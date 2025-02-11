@@ -29,7 +29,7 @@ int modbus_read_din(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, ui
 
 int modbus_read_hreg(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, uint8_t *val)
 {
-    for (int32_t i = 0; i < len*2; i++)
+    for (int32_t i = 0; i < len; i++)
     {
         *(val + 2*i) = seed++;
         *(val + 2*i + 1) = seed++;
