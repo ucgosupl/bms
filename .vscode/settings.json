@@ -1,0 +1,7 @@
+{
+    "cmake.buildDirectory": "${workspaceFolder}/out",
+    "files.associations": {
+        "*.h": "c",
+        "*.c": "c"
+    },
+}

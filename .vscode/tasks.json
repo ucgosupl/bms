@@ -1,0 +1,47 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build bms",
+            "type": "shell",
+            "command": "ninja",
+            "args": ["-v"],
+            "options": {
+                "cwd": "${workspaceFolder}/out"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "base": "$gcc", 
+            }
+        },
+        {
+            "label": "clean bms",
+            "type": "shell",
+            "command": "ninja",
+            "args": ["-v", "clean"],
+            "options": {
+                "cwd": "${workspaceFolder}/out"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "test bms",
+            "type": "shell",
+            "command": "ctest",
+            "args": ["--verbose"],
+            "options": {
+                "cwd": "${workspaceFolder}/out"
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+        },
+    ]
+}

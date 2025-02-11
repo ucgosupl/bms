@@ -1,0 +1,17 @@
+# Eclipse Project files
+.settings
+.cproject
+.project
+
+# Cube code generation
+.mxproject
+*.ioc
+
+# Cube debugger config
+*.launch
+
+# Compilation output
+out/
+Debug/
+Release/
+build/
