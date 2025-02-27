@@ -1,31 +1,26 @@
 #set(CMAKE_TOOLCHAIN_FILE ../cmake/toolchain-arm-gcc.cmake)
 include(../cmake/compiler_flags.cmake)
 
-add_subdirectory(Drivers)
+add_subdirectory(infra/hal/Drivers)
 
 set(INCLUDE_DIRS
-
-    Core/Inc
-   
     .
 )
 
 set(C_SRCS
-    #Cube Generated
-    Core/Src/stm32f4xx_hal_msp.c
-    Core/Src/stm32f4xx_it.c
-    Core/Src/system_stm32f4xx.c
-    Core/Src/syscalls.c
-    Core/Src/sysmem.c
-
-    Core/Src/main.c
-
+    #Cube Generatedhal_init
+    app/startup/stm32f4xx_hal_msp.c
+    app/startup/stm32f4xx_it.c
+    app/startup/system_stm32f4xx.c
+    app/startup/hal_startup.c
+    app/stdlib/syscalls.c
+    app/stdlib/sysmem.c
+    main.c
     #User Code
-
 )
 
 set(ASM_SRCS
-    Core/Startup/startup_stm32f411retx.s
+app/startup/startup_stm32f411retx.s
 )
 
 set(GLOBAL_DEFINES
