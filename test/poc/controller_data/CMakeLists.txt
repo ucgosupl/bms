@@ -17,7 +17,7 @@ set(TEST_INCLUDE_DIRS
 )
 
 set(SRCS
-
+	${SRC_PATH}/gateway/controller_data/controller_data.c
 )
 
 set(POC_NAME controller_data)

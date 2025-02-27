@@ -8,15 +8,18 @@ set(INCLUDE_DIRS
 )
 
 set(C_SRCS
-    #Cube Generatedhal_init
+    #app
     app/startup/stm32f4xx_hal_msp.c
     app/startup/stm32f4xx_it.c
     app/startup/system_stm32f4xx.c
     app/startup/hal_startup.c
+
     app/stdlib/syscalls.c
     app/stdlib/sysmem.c
     main.c
-    #User Code
+
+    #gateway
+    gateway/controller_data/controller_data.c
 )
 
 set(ASM_SRCS
