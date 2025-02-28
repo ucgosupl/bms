@@ -1,5 +1,6 @@
 #include "gateway/controller_data/controller_data.h"
 #include "gateway/updater/updater.h"
+#include "gateway/server/server.h"
 
 #include <stdio.h>
 
@@ -18,6 +19,8 @@ int main(void)
 
    updater_init();
    updater_subscribe(update_console);
+
+   server_init();
 
    updater_cycle();
 

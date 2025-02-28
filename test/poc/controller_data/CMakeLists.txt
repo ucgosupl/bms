@@ -19,6 +19,7 @@ set(TEST_INCLUDE_DIRS
 set(SRCS
 	${SRC_PATH}/gateway/controller_data/controller_data.c
 	${SRC_PATH}/gateway/updater/updater.c
+	${SRC_PATH}/gateway/server/server.c
 )
 
 set(POC_NAME controller_data)
@@ -26,6 +27,7 @@ set(POC_NAME controller_data)
 set(TEST_SRCS
 	modbus_mock.c
 	datetime_mock.c
+	server_protocol_mock.c
 
 	main.c
 )
