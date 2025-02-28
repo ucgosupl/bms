@@ -6,11 +6,17 @@ void nvmem_config_save(const uint8_t *buf, int32_t len)
     (void) len;
 }
 
-int32_t nvmem_config_get(uint8_t *buf, int32_t len)
+nvmem_reader_t nvmem_reader_get(void)
 {
+    return 0;
+}
+
+int32_t nvmem_reader_get_next_chunk(nvmem_reader_t *r, uint8_t *buf, int32_t len)
+{
+    (void) r;
     (void) buf;
     (void) len;
-
+    
     return 0;
 }
 
