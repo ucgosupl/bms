@@ -39,6 +39,13 @@ void scp_modify_subscribe(on_modify_t c)
     modify_cb = c;
 }
 
+static on_config_t config_cb = NULL;
+
+void scp_config_subscribe(on_config_t c)
+{
+    config_cb = c;
+}
+
 void scp_mock_print_bin(void)
 {
     pp = PRINT_BIN;
@@ -53,6 +60,12 @@ void scp_mock_trigger_modify(uint8_t *frame, int32_t n)
 {
     if (NULL != modify_cb)
         modify_cb(frame, n);
+}
+
+void scp_mock_trigger_config(uint8_t *frame, int32_t n)
+{
+    if (NULL != config_cb)
+        config_cb(frame, n);
 }
 
 static void print_bin(const uint8_t *frame, int32_t n)

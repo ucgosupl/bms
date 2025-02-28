@@ -1,3 +1,4 @@
+#include "gateway/config/config.h"
 #include "gateway/controller_data/controller_data.h"
 #include "gateway/updater/updater.h"
 #include "gateway/server/server.h"
@@ -12,6 +13,7 @@ static void update_console(void);
 
 int main(void)
 {
+   config_init();
    cdata_init();
 
    cdata_add_record(1, 3, 0x0010, 1, &buf[0]);  //2 bytes
@@ -34,6 +36,9 @@ int main(void)
    r.reg = 0xFFAA;
    val = 0x1155;
    scp_mock_trigger_modify((uint8_t *)&r, sizeof(struct cdata_record));
+
+   uint8_t buf[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+   scp_mock_trigger_config(buf, 16);
 
    return 0;
 }

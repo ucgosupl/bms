@@ -1,5 +1,7 @@
 #include "interface/modbus/modbus.h"
 
+#include <stdio.h>
+
 static uint8_t seed;
 
 void modbus_init(void)
