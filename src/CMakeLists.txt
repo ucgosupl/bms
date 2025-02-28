@@ -19,13 +19,16 @@ set(C_SRCS
     main.c
 
     #gateway
+    gateway/config/config.c
     gateway/controller_data/controller_data.c
     gateway/updater/updater.c
     gateway/server/server.c
     gateway/server/bin_packet_builder.c
     gateway/server/txt_packet_builder.c
 
+    infra/nvmem/nvmem.c
     infra/server_protocol/server_protocol.c
+    infra/system/system.c
 )
 
 set(ASM_SRCS

@@ -12,3 +12,13 @@ void scp_update_records(const uint8_t *frame, int32_t n)
     (void) frame;
     (void) n;
 }
+
+void scp_modify_subscribe(on_modify_t c)
+{
+    (void) c;
+}
+
+void scp_config_subscribe(on_config_t c)
+{
+    (void) c;
+}
