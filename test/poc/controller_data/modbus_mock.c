@@ -9,6 +9,9 @@ void modbus_init(void)
 
 int modbus_read_coil(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, uint8_t *val)
 {
+    (void) slave;
+    (void) reg;
+
     for (int32_t i = 0; i < (len+7)/8; i++)
     {
         *(val + i) = seed++;
@@ -19,6 +22,9 @@ int modbus_read_coil(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, u
 
 int modbus_read_din(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, uint8_t *val)
 {
+    (void) slave;
+    (void) reg;
+
     for (int32_t i = 0; i < (len+7)/8; i++)
     {
         *(val + i) = seed++;
@@ -29,6 +35,9 @@ int modbus_read_din(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, ui
 
 int modbus_read_hreg(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, uint8_t *val)
 {
+    (void) slave;
+    (void) reg;
+
     for (int32_t i = 0; i < len; i++)
     {
         *(val + 2*i) = seed++;
@@ -40,6 +49,9 @@ int modbus_read_hreg(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, u
 
 int modbus_read_inreg(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, uint8_t *val)
 {
+    (void) slave;
+    (void) reg;
+
     for (int32_t i = 0; i < len; i++)
     {
         *(val + 2*i) = seed++;
@@ -51,19 +63,40 @@ int modbus_read_inreg(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, 
 
 int modbus_write_coil(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, uint8_t *val)
 {
+    (void) slave;
+    (void) reg;
+    (void) len;
+    (void) val;
+
+
     return 0;
 }
 int modbus_write_din(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, uint8_t *val)
 {
+    (void) slave;
+    (void) reg;
+    (void) len;
+    (void) val;
+
     return 0;
 }
 
 int modbus_write_hreg(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, uint8_t *val)
 {
+    (void) slave;
+    (void) reg;
+    (void) len;
+    (void) val;
+
     return 0;
 }
 
 int modbus_write_inreg(modbus_slave_t slave, modbus_reg_t reg, modbus_len_t len, uint8_t *val)
 {
+    (void) slave;
+    (void) reg;
+    (void) len;
+    (void) val;
+    
     return 0;
 }
