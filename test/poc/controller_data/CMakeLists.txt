@@ -25,6 +25,7 @@ set(POC_NAME controller_data)
 
 set(TEST_SRCS
 	modbus_mock.c
+	datetime_mock.c
 
 	main.c
 )
