@@ -20,6 +20,7 @@ set(C_SRCS
 
     #gateway
     gateway/config/config.c
+    gateway/config/simple_config_builder.c
     gateway/controller_data/controller_data.c
     gateway/updater/updater.c
     gateway/server/server.c

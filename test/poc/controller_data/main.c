@@ -1,10 +1,12 @@
 #include "gateway/config/config.h"
+#include "gateway/config/config_builder.h"
 #include "gateway/controller_data/controller_data.h"
 #include "gateway/updater/updater.h"
 #include "gateway/server/server.h"
 
 #include "server_protocol_mock.h"
 
+#include <string.h>
 #include <stdio.h>
 
 static void update_console(void);
@@ -54,25 +56,6 @@ static void update_console(void)
 
 static uint8_t config_buf[8 * 1024];
 
-#include "interface/datetime/datetime.h"
-
-#include <string.h>
-
-struct config_header
-{
-    int32_t n_records;
-    struct datetime last_modified;
-    char author[256 - sizeof(struct datetime) - 4];
-};
-
-struct config_record
-{
-   modbus_slave_t slave;
-   modbus_fun_t fun;
-   modbus_reg_t reg;
-   modbus_len_t len;
-};
-
 static const struct config_record config_records[] =
 {
    {1, 3, 0x0010, 1},
@@ -82,6 +65,8 @@ static const struct config_record config_records[] =
 };
 
 #define CONFIG_RECORDS_CNT (sizeof(config_records) / sizeof(config_records[0]))
+
+extern void nvmem_mock_saved_config_set(uint8_t *buf);
 
 static void prepare_config(void)
 {
