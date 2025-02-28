@@ -2,14 +2,13 @@
 #include "gateway/updater/updater.h"
 #include "gateway/server/server.h"
 
+#include "server_protocol_mock.h"
+
 #include <stdio.h>
 
 static uint8_t buf[512];
 
 static void update_console(void);
-
-extern void scp_mock_print_bin(void);
-extern void scp_mock_print_txt(void);
 
 int main(void)
 {
@@ -26,7 +25,15 @@ int main(void)
    server_init(PACKET_BIN);
    scp_mock_print_bin();
 
+   uint16_t val = 0xAABB;
+   struct cdata_record r = {0x05, 0x03, 0x1122, 0x0001, (uint8_t *)&val};
+   scp_mock_trigger_modify((uint8_t *)&r, sizeof(struct cdata_record));
    updater_cycle();
+
+   r.slave = 0x08;
+   r.reg = 0xFFAA;
+   val = 0x1155;
+   scp_mock_trigger_modify((uint8_t *)&r, sizeof(struct cdata_record));
 
    return 0;
 }

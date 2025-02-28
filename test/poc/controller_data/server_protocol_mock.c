@@ -1,3 +1,5 @@
+#include "server_protocol_mock.h"
+
 #include "interface/server_protocol/server_protocol.h"
 
 #include <stdio.h>
@@ -30,6 +32,29 @@ void scp_update_records(const uint8_t *frame, int32_t n)
     }
 }
 
+static on_modify_t modify_cb = NULL;
+
+void scp_modify_subscribe(on_modify_t c)
+{
+    modify_cb = c;
+}
+
+void scp_mock_print_bin(void)
+{
+    pp = PRINT_BIN;
+}
+
+void scp_mock_print_txt(void)
+{
+    pp = PRINT_TXT;  
+}
+
+void scp_mock_trigger_modify(uint8_t *frame, int32_t n)
+{
+    if (NULL != modify_cb)
+        modify_cb(frame, n);
+}
+
 static void print_bin(const uint8_t *frame, int32_t n)
 {
     printf("\nSERVER PROTOCOL MOCK PRINT BIN\n");
@@ -45,15 +70,4 @@ static void print_txt(const uint8_t *frame, int32_t n)
 
     printf("\nSERVER PROTOCOL MOCK PRINT TXT\n");
     printf("%s", frame);
-}
-
-
-void scp_mock_print_bin(void)
-{
-    pp = PRINT_BIN;
-}
-
-void scp_mock_print_txt(void)
-{
-    pp = PRINT_TXT;  
 }
