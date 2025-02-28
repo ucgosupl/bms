@@ -10,13 +10,19 @@
 #include "interface/server_protocol/server_protocol.h"
 
 static void on_update(void);
-static void set_pb_policy(enum packet_type pt);
+
+typedef const struct packet_builder * (*pb_get_fun_t)(void);
+static const pb_get_fun_t pb_fun_mapper[PACKET_MAX] =
+{
+    bin_pb_get,
+    txt_pb_get,
+};
 
 static const struct packet_builder *pb;
 
 void server_init(enum packet_type pt)
 {
-    set_pb_policy(pt);
+    pb = pb_fun_mapper[pt]();
     updater_subscribe(on_update);
 }
 
@@ -41,18 +47,4 @@ static void on_update(void)
    }
 
    scp_update_records(frame, n);
-}
-
-static void set_pb_policy(enum packet_type pt)
-{
-    switch (pt)
-    {
-        case PACKET_BIN:
-            pb = bin_pb_get();
-            break;
-        case PACKET_TXT:
-            pb = txt_pb_get();
-        default:
-            break;
-    }
 }
