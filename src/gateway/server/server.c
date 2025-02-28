@@ -8,8 +8,10 @@
 
 #include "interface/datetime/datetime.h"
 #include "interface/server_protocol/server_protocol.h"
+#include "interface/modbus/modbus.h"
 
 static void on_update(void);
+static void on_modify(const uint8_t *frame, int32_t n);
 
 typedef const struct packet_builder * (*pb_get_fun_t)(void);
 static const pb_get_fun_t pb_fun_mapper[PACKET_MAX] =
@@ -24,6 +26,7 @@ void server_init(enum packet_type pt)
 {
     pb = pb_fun_mapper[pt]();
     updater_subscribe(on_update);
+    scp_modify_subscribe(on_modify);
 }
 
 static void on_update(void)
@@ -47,4 +50,13 @@ static void on_update(void)
    }
 
    scp_update_records(frame, n);
+}
+
+static void on_modify(const uint8_t *frame, int32_t n)
+{
+    (void) n;
+    
+    struct cdata_record *r = (struct cdata_record *)frame;
+
+    modbus_write_hreg(r->slave, r->reg, r->len, r->val);
 }
