@@ -32,6 +32,7 @@ void scp_update_records(const uint8_t *frame, int32_t n)
 
 static void print_bin(const uint8_t *frame, int32_t n)
 {
+    printf("\nSERVER PROTOCOL MOCK PRINT BIN\n");
     for (int32_t i = 0; i < n; i++)
     {
         printf("0x%02X\n", frame[i]);
@@ -42,6 +43,7 @@ static void print_txt(const uint8_t *frame, int32_t n)
 {
     (void) n;
 
+    printf("\nSERVER PROTOCOL MOCK PRINT TXT\n");
     printf("%s", frame);
 }
 

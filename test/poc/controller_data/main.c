@@ -33,6 +33,7 @@ int main(void)
 
 static void update_console(void)
 {
+   printf("\nCONSOLE UPDATER:\n");
    cdata_iterator_t it = cdata_get_iterator();
    for (const struct cdata_record *r = cdata_get_next(&it); r != NULL; r = cdata_get_next(&it))
    {
