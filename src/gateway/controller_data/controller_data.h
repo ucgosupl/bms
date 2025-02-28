@@ -11,5 +11,10 @@ struct cdata_record
     uint8_t *val;
 };
 
-//cdata_init
-//cdata_add_record
+void cdata_init(void);
+void cdata_add_record(modbus_slave_t s, modbus_fun_t f, modbus_reg_t r, modbus_len_t l, uint8_t *v);
+
+typedef int cdata_iterator_t;
+
+cdata_iterator_t cdata_get_iterator(void);
+const struct cdata_record * cdata_get_next(cdata_iterator_t *i);
