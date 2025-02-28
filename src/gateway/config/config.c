@@ -36,20 +36,6 @@ struct config_record
 static struct config_header header = {0};
 static struct config_record record = {0};
 
-static uint8_t buf[8192];
-static int32_t buf_offset = 0;
-
-static uint8_t * allocate(int32_t size)
-{
-    int32_t start = buf_offset;
-
-    buf_offset += size;
-
-    return buf + start;
-}
-
-#include <stdlib.h>
-
 void config_load(void)
 {
     nvmem_reader_t reader = nvmem_reader_get();
@@ -59,9 +45,7 @@ void config_load(void)
     for (int32_t i = 0; i < header.n_records; i++)
     {
         nvmem_reader_get_next_chunk(&reader, (uint8_t *)&record, sizeof(struct config_record));
-
-        uint8_t *val = malloc(record.len * 2);
-        cdata_add_record(record.slave, record.fun, record.reg, record.len, val);
+        cdata_add_record(record.slave, record.fun, record.reg, record.len);
     }
 }
 

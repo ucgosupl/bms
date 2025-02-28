@@ -2,6 +2,8 @@
 
 #include "interface/modbus/modbus_define.h"
 
+#include <stddef.h>
+
 struct cdata_record
 {
     modbus_slave_t slave;
@@ -11,8 +13,10 @@ struct cdata_record
     uint8_t *val;
 };
 
-void cdata_init(void);
-void cdata_add_record(modbus_slave_t s, modbus_fun_t f, modbus_reg_t r, modbus_len_t l, uint8_t *v);
+typedef void * (*allocator_t)(size_t size);
+
+void cdata_init(allocator_t a);
+void cdata_add_record(modbus_slave_t s, modbus_fun_t f, modbus_reg_t r, modbus_len_t l);
 
 typedef int cdata_iterator_t;
 

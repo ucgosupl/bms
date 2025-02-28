@@ -1,8 +1,11 @@
 #include "interface/nvmem/nvmem.h"
 
+#include <string.h>
 #include <stdio.h>
 
 static void trigger_save_completed(void);
+
+static uint8_t *saved_config = NULL;
 
 void nvmem_config_save(const uint8_t *buf, int32_t len)
 {
@@ -15,11 +18,17 @@ void nvmem_config_save(const uint8_t *buf, int32_t len)
 
 }
 
-int32_t nvmem_config_get(uint8_t *buf, int32_t len)
+nvmem_reader_t nvmem_reader_get(void)
 {
-    (void) buf;
-    (void) len;
+    return 0;
+}
 
+int32_t nvmem_reader_get_next_chunk(nvmem_reader_t *r, uint8_t *buf, int32_t len)
+{
+    memcpy(buf, saved_config +*r, len);
+
+    *r += len;
+    
     return 0;
 }
 
@@ -28,6 +37,11 @@ static on_save_completed_t save_completed_cb = NULL;
 void nvmem_save_completed_subscribe(on_save_completed_t c)
 {
     save_completed_cb = c;
+}
+
+void nvmem_mock_saved_config_set(uint8_t *buf)
+{
+    saved_config = buf;
 }
 
 static void trigger_save_completed(void)

@@ -7,19 +7,17 @@
 
 #include <stdio.h>
 
-static uint8_t buf[512];
-
 static void update_console(void);
+static void prepare_config(void);
+static void * allocate(size_t size);
 
 int main(void)
 {
    config_init();
-   cdata_init();
+   cdata_init(allocate);
 
-   cdata_add_record(1, 3, 0x0010, 1, &buf[0]);  //2 bytes
-   cdata_add_record(1, 3, 0x0020, 2, &buf[2]);  //4 bytes
-   cdata_add_record(1, 3, 0x0030, 1, &buf[6]);  //2 bytes
-   cdata_add_record(1, 3, 0x0040, 2, &buf[8]);  //4 bytes
+   prepare_config();
+   config_load();
 
    updater_init();
    updater_subscribe(update_console);
@@ -52,4 +50,80 @@ static void update_console(void)
       uint32_t val = r->val[0] | r->val[1] << 8 | r->val[2]<< 16 | r->val[3] << 24;
       printf("SLAVE: 0x%02X, FUN: 0x%02X REG: 0x%04X, LEN: 0x%04X, VAL: 0x%08X\n", r->slave, r->fun, r->reg, r->len, val);
    }
+}
+
+static uint8_t config_buf[8 * 1024];
+
+#include "interface/datetime/datetime.h"
+
+#include <string.h>
+
+struct config_header
+{
+    int32_t n_records;
+    struct datetime last_modified;
+    char author[256 - sizeof(struct datetime) - 4];
+};
+
+struct config_record
+{
+   modbus_slave_t slave;
+   modbus_fun_t fun;
+   modbus_reg_t reg;
+   modbus_len_t len;
+};
+
+static const struct config_record config_records[] =
+{
+   {1, 3, 0x0010, 1},
+   {1, 3, 0x0020, 2},
+   {1, 3, 0x0030, 1},
+   {1, 3, 0x0040, 2},
+};
+
+#define CONFIG_RECORDS_CNT (sizeof(config_records) / sizeof(config_records[0]))
+
+static void prepare_config(void)
+{
+   struct config_header h;
+
+   memset(&h, 0, sizeof(struct config_header));
+
+   h.n_records = CONFIG_RECORDS_CNT;
+
+   h.last_modified.year = 2025;
+   h.last_modified.month = 1;
+   h.last_modified.day = 20;
+
+   h.last_modified.h = 20;
+   h.last_modified.m = 25;
+   h.last_modified.s = 22;
+
+   strcpy(h.author, "Jan Kowalski");
+
+   memcpy(config_buf, &h, sizeof(struct config_header));
+   int32_t offset = sizeof(struct config_header);
+
+   memcpy(config_buf + offset, config_records, sizeof(config_records));
+   offset += sizeof(config_records);
+
+   printf("\nPREPARED CONFIG\n");
+   for (int32_t i = 0; i < offset; i++)
+      printf("0x%02X ", config_buf[i]);
+   
+   printf("\n\n");
+
+   nvmem_mock_saved_config_set(config_buf);
+}
+
+static uint8_t buf[8192];
+static int32_t buf_offset = 0;
+
+static void * allocate(size_t size)
+{
+    int32_t start = buf_offset;
+
+    buf_offset += size;
+
+    return buf + start;
 }
