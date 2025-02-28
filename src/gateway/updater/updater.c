@@ -7,7 +7,7 @@
 
 #define MAX_SUBSCRIBERS  16
 
-static update_fun_t subscribers[MAX_SUBSCRIBERS];
+static on_update_t subscribers[MAX_SUBSCRIBERS];
 static int32_t subs_cnt;
 
 static void notify(void);
@@ -29,7 +29,7 @@ void updater_cycle(void)
     notify();
 }
 
-void updater_subscribe(update_fun_t f)
+void updater_subscribe(on_update_t f)
 {
     subscribers[subs_cnt++] = f;
 }

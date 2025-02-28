@@ -3,6 +3,6 @@
 void updater_init(void);
 void updater_cycle(void);
 
-typedef void (*update_fun_t)(void);
+typedef void (*on_update_t)(void);
 
-void updater_subscribe(update_fun_t f);
+void updater_subscribe(on_update_t f);
