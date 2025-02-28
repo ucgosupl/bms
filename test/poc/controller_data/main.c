@@ -8,6 +8,9 @@ static uint8_t buf[512];
 
 static void update_console(void);
 
+extern void scp_mock_print_bin(void);
+extern void scp_mock_print_txt(void);
+
 int main(void)
 {
    cdata_init();
@@ -20,7 +23,8 @@ int main(void)
    updater_init();
    updater_subscribe(update_console);
 
-   server_init(PACKET_TXT);
+   server_init(PACKET_BIN);
+   scp_mock_print_bin();
 
    updater_cycle();
 
