@@ -1,3 +1,9 @@
 #pragma once
 
-void server_init(void);
+enum packet_type
+{
+    PACKET_BIN,
+    PACKET_TXT,
+};
+
+void server_init(enum packet_type pt);

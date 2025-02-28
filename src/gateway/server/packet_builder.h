@@ -13,3 +13,4 @@ struct packet_builder
 };
 
 const struct packet_builder * bin_pb_get(void);
+const struct packet_builder * txt_pb_get(void);

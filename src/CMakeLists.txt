@@ -23,6 +23,7 @@ set(C_SRCS
     gateway/updater/updater.c
     gateway/server/server.c
     gateway/server/bin_packet_builder.c
+    gateway/server/txt_packet_builder.c
 
     infra/server_protocol/server_protocol.c
 )

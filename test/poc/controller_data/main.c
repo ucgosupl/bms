@@ -20,7 +20,7 @@ int main(void)
    updater_init();
    updater_subscribe(update_console);
 
-   server_init();
+   server_init(PACKET_TXT);
 
    updater_cycle();
 
