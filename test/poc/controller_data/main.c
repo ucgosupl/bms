@@ -16,14 +16,14 @@ int main(void)
    uint32_t val3 = 0xFFFFFFFF;
 
    //CONFIG
-   cdata_add_record(0x01, 0x03, 0x1100, 1, &buf[0]);
-   cdata_add_record(0x01, 0x03, 0x1101, 2, &buf[2]);
-   cdata_add_record(0x01, 0x03, 0x1102, 1, &buf[6]);
+   cdata_add_record(0x01, 0x03, 0x1100, 1, &val1);
+   cdata_add_record(0x01, 0x03, 0x1101, 2, &val2);
+   cdata_add_record(0x01, 0x03, 0x1102, 1, &val3);
 
    //RUNTIME
-   for (int32_t i = 0; i < cdata_records_cnt(); i++)
+   cdata_iterator_t it = cdata_iterator_create();
+   for (const struct cdata_record * r = cdata_get_next(&it); r != NULL; r = cdata_get_next(&it))
    {
-      const struct cdata_record * r = cdata_get_record(i);
       modbus_read_hreg(r->slave, r->reg, r->len, r->val);
    }
 

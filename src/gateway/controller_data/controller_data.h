@@ -14,5 +14,7 @@ struct cdata_record
 void cdata_init(void);
 void cdata_add_record(modbus_slave_t s, modbus_fun_t f, modbus_reg_t r, modbus_len_t l, uint8_t *v);
 
-const struct cdata_record * cdata_get_record(uint32_t i);
+typedef int cdata_iterator_t;
+cdata_iterator_t cdata_iterator_create(void);
+const struct cdata_record * cdata_get_next(cdata_iterator_t *i);
 uint32_t cdata_records_cnt(void);

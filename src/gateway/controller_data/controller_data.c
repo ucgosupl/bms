@@ -27,6 +27,19 @@ void cdata_add_record(modbus_slave_t s,
     n++;
 }
 
+cdata_iterator_t cdata_iterator_create(void)
+{
+    return 0;
+}
+
+const struct cdata_record * cdata_get_next(cdata_iterator_t *i)
+{
+    if (n <= *i)
+        return NULL;
+    
+    return &records[(*i)++];
+}
+
 const struct cdata_record * cdata_get_record(uint32_t i)
 {
     return &records[i];
