@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+static void update_console(void);
+
 uint8_t buf[1024];
 
 int main(void)
@@ -22,6 +24,7 @@ int main(void)
 
    //RUNTIME
    updater_cycle();
+   update_console();
 
    //DEBUG
    printf("VAL1: 0x%08X\n\n\n\n\n", val1);
@@ -29,4 +32,14 @@ int main(void)
    printf("VAL3: 0x%08X\n\n\n\n\n", val3);
 
    return 0;
+}
+
+static void update_console(void)
+{
+   cdata_iterator_t it = cdata_iterator_create();
+   for (const struct cdata_record * r = cdata_get_next(&it); r != NULL; r = cdata_get_next(&it))
+   {
+      uint32_t val = r->val[0] | r->val[1] << 8 | r->val[2]<< 16 | r->val[3] << 24;
+      printf("SLAVE: 0x%02X, FUN: 0x%02X REG: 0x%04X, LEN: 0x%04X, VAL: 0x%08X\n", r->slave, r->fun, r->reg, r->len, val);
+   }
 }
