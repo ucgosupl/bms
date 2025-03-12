@@ -1,16 +1,36 @@
 #include "interface/modbus/modbus.h"
 
+#include "gateway/controller_data/controller_data.h"
+
 #include <stdio.h>
+
+uint8_t buf[1024];
 
 int main(void)
 {
    modbus_init();
+   cdata_init();
 
-   uint32_t val = 0xFFFFFFFF;
+   uint32_t val1 = 0xFFFFFFFF;
+   uint32_t val2 = 0xFFFFFFFF;
+   uint32_t val3 = 0xFFFFFFFF;
 
-   modbus_read_hreg(1, 2, 2, &val);
+   //CONFIG
+   cdata_add_record(0x01, 0x03, 0x1100, 1, &buf[0]);
+   cdata_add_record(0x01, 0x03, 0x1101, 2, &buf[2]);
+   cdata_add_record(0x01, 0x03, 0x1102, 1, &buf[6]);
 
-   printf("VAL: 0x%08X\n\n\n\n\n", val);
+   //RUNTIME
+   for (int32_t i = 0; i < cdata_records_cnt(); i++)
+   {
+      const struct cdata_record * r = cdata_get_record(i);
+      modbus_read_hreg(r->slave, r->reg, r->len, r->val);
+   }
+
+   //DEBUG
+   printf("VAL1: 0x%08X\n\n\n\n\n", val1);
+   printf("VAL2: 0x%08X\n\n\n\n\n", val2);
+   printf("VAL3: 0x%08X\n\n\n\n\n", val3);
 
    return 0;
 }
