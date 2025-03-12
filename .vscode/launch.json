@@ -10,8 +10,10 @@
             "name": "Debug bms",
             "svdFile": "${userHome}/.vscode/extensions/marus25.cortex-debug-dp-stm32f4-1.0.0/data/STM32F411xx.svd",
             "configFiles": [
-                "interface/stlink-v2-1.cfg", "target/stm32f4x.cfg"
+                "interface/stlink.cfg",
+                "target/stm32f4x.cfg"
             ],
+            //"searchDir": ["C:\\ARM\\openocd-v0.12.0-i686-w64-mingw32\\share\\openocd\\scripts"],
             "runToEntryPoint": "main",
         },
         {
@@ -25,7 +27,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "C:\\Tools\\winlibs-i686-posix-dwarf-gcc-13.2.0-llvm-17.0.5-mingw-w64ucrt-11.0.1-r3\\mingw32\\bin\\gdb.exe",
+            "miDebuggerPath": "C:\\Programy\\mingw\\MinGW\\bin\\gdb.exe",
             "setupCommands": [
               {
                 "description": "Enable pretty-printing for gdb",
