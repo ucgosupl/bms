@@ -1,9 +1,15 @@
 #include "gateway/controller_data/controller_data.h"
 #include "gateway/updater/updater.h"
 
+#include "interface/datetime/datetime.h"
+
 #include <stdio.h>
+#include <string.h>
 
 static void update_console(void);
+static void update_server(void);
+static int32_t write_datetime(uint8_t *buf, const struct datetime *dt);
+static int32_t write_record(uint8_t *buf, const struct cdata_record *r);
 
 uint8_t buf[1024];
 
@@ -25,6 +31,7 @@ int main(void)
    //RUNTIME
    updater_cycle();
    update_console();
+   update_server();
 
    //DEBUG
    printf("VAL1: 0x%08X\n\n\n\n\n", val1);
@@ -42,4 +49,57 @@ static void update_console(void)
       uint32_t val = r->val[0] | r->val[1] << 8 | r->val[2]<< 16 | r->val[3] << 24;
       printf("SLAVE: 0x%02X, FUN: 0x%02X REG: 0x%04X, LEN: 0x%04X, VAL: 0x%08X\n", r->slave, r->fun, r->reg, r->len, val);
    }
+}
+
+
+
+static uint8_t frame_buf[1024];
+
+static void update_server(void)
+{
+    struct datetime dt;
+    datetime_get(&dt);
+
+    int32_t n = 0;
+    
+    n += write_datetime(&frame_buf[n], &dt);
+
+    cdata_iterator_t it = cdata_iterator_create();
+    for (const struct cdata_record * r = cdata_get_next(&it); r != NULL; r = cdata_get_next(&it))
+    {
+      n += write_record(&frame_buf[n], r);
+    }
+
+   for (int32_t i = 0; i < n; i++)
+   {
+       printf("0x%02X\n", frame_buf[i]);
+   }
+}
+
+static int32_t write_datetime(uint8_t *buf, const struct datetime *dt)
+{
+    buf[0] = dt->year >> 8;
+    buf[1] = dt->year;
+    buf[2] = dt->month;
+    buf[3] = dt->day;
+    buf[4] = dt->h;
+    buf[5] = dt->m;
+    buf[6] = dt->s;
+    buf[7] = 0;
+
+    return 8;
+}
+
+static int32_t write_record(uint8_t *buf, const struct cdata_record *r)
+{
+    buf[0] = r->slave;
+    buf[1] = r->fun;
+    buf[2] = r->reg >> 8;
+    buf[3] = r->reg;
+    buf[4] = r->len >> 8;
+    buf[5] = r->len;
+
+    memcpy(&buf[6], r->val, r->len * 2);
+    
+    return 6 + r->len*2;
 }
