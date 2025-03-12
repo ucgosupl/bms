@@ -27,13 +27,11 @@ int main(void)
    cdata_add_record(0x01, 0x03, 0x1102, 1, &val3);
 
    updater_init();
-   updater_subscribe(update_console);
-   updater_subscribe(update_server);
 
    //RUNTIME
    updater_cycle();
-   // update_console();
-   // update_server();
+   update_console();
+   update_server();
 
    //DEBUG
    printf("VAL1: 0x%08X\n\n\n\n\n", val1);
