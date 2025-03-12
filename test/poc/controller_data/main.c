@@ -7,9 +7,14 @@
 #include <string.h>
 
 static void update_console(void);
+
 static void update_server(void);
 static int32_t write_datetime(uint8_t *buf, const struct datetime *dt);
 static int32_t write_record(uint8_t *buf, const struct cdata_record *r);
+
+static void update_server_txt(void);
+static int32_t txt_add_timestamp(uint8_t *buf, const struct datetime *dt);
+static int32_t txt_add_record(uint8_t *buf, const struct cdata_record *r);
 
 uint8_t buf[1024];
 
@@ -29,6 +34,7 @@ int main(void)
    updater_init();
    updater_subscribe(update_console);
    updater_subscribe(update_server);
+   updater_subscribe(update_server_txt);
 
    //RUNTIME
    updater_cycle();
@@ -104,4 +110,74 @@ static int32_t write_record(uint8_t *buf, const struct cdata_record *r)
     memcpy(&buf[6], r->val, r->len * 2);
     
     return 6 + r->len*2;
+}
+
+
+static void update_server_txt(void)
+{
+    struct datetime dt;
+    datetime_get(&dt);
+
+    int32_t n = 0;
+    
+    n += txt_add_timestamp(&frame_buf[n], &dt);
+
+    cdata_iterator_t it = cdata_iterator_create();
+    for (const struct cdata_record * r = cdata_get_next(&it); r != NULL; r = cdata_get_next(&it))
+    {
+      n += txt_add_record(&frame_buf[n], r);
+    }
+
+   printf("%s", frame_buf);
+}
+
+static int32_t txt_add_timestamp(uint8_t *buf, const struct datetime *dt)
+{
+    buf[0] = (dt->year/1000) + '0';
+    buf[1] = (dt->year%1000)/100 + '0';
+    buf[2] = (dt->year%100)/10 + '0';
+    buf[3] = (dt->year%10) + '0';
+
+    buf[4] = '-';
+
+    buf[5] = (dt->month/10) + '0';
+    buf[6] = (dt->month%10) + '0';
+
+    buf[7] = '-';
+
+    buf[8] = (dt->day/10) + '0';
+    buf[9] = (dt->day%10) + '0';
+
+    buf[10] = ' ';
+
+    buf[11] = (dt->h/10) + '0';
+    buf[12] = (dt->h%10) + '0';
+
+    buf[13] = ':';
+
+    buf[14] = (dt->m/10) + '0';
+    buf[15] = (dt->m%10) + '0';
+
+    buf[16] = ':';
+
+    buf[17] = (dt->s/10) + '0';
+    buf[18] = (dt->s%10) + '0';
+
+    buf[19] = '\n';
+
+    return 20;
+}
+
+static int32_t txt_add_record(uint8_t *buf, const struct cdata_record *r)
+{
+    int32_t n = sprintf((char *)buf, "SLAVE: 0x%02X, FUN: 0x%02X REG: 0x%04X, LEN: 0x%04X, VAL:", r->slave, r->fun, r->reg, r->len);
+
+    for (int32_t i = 0; i < r->len*2; i++)
+    {
+        n += sprintf((char *)buf+n, " 0x%02X", r->val[i]);
+    }
+
+    n += sprintf((char *)buf+n, "\n");
+
+    return n;
 }
