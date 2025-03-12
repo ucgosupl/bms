@@ -1,6 +1,5 @@
-#include "interface/modbus/modbus.h"
-
 #include "gateway/controller_data/controller_data.h"
+#include "gateway/updater/updater.h"
 
 #include <stdio.h>
 
@@ -8,7 +7,6 @@ uint8_t buf[1024];
 
 int main(void)
 {
-   modbus_init();
    cdata_init();
 
    uint32_t val1 = 0xFFFFFFFF;
@@ -20,12 +18,10 @@ int main(void)
    cdata_add_record(0x01, 0x03, 0x1101, 2, &val2);
    cdata_add_record(0x01, 0x03, 0x1102, 1, &val3);
 
+   updater_init();
+
    //RUNTIME
-   cdata_iterator_t it = cdata_iterator_create();
-   for (const struct cdata_record * r = cdata_get_next(&it); r != NULL; r = cdata_get_next(&it))
-   {
-      modbus_read_hreg(r->slave, r->reg, r->len, r->val);
-   }
+   updater_cycle();
 
    //DEBUG
    printf("VAL1: 0x%08X\n\n\n\n\n", val1);

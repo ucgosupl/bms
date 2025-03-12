@@ -20,6 +20,7 @@ set(C_SRCS
 
     #gateway
     gateway/controller_data/controller_data.c
+    gateway/updater/updater.c
 )
 
 set(ASM_SRCS
